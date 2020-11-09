@@ -1,0 +1,58 @@
+
+{% extends '_homebase.html' %}
+{% block booking %}
+{% load static %}
+
+<div style="background: linear-gradient(45deg, rgba(224,243,250,1) 0%,rgba(216,240,252,1) 50%,rgba(184,226,246,1) 51%,rgba(182,223,253,1) 100%); ">
+    <div class="text-center" style="padding-top: 20px;">
+    <img src="{% static '/' %}img/logo.jpeg"   alt="This is not displayed" width="80%">
+    </div>
+    <div class="container" style="padding-top: 40px;">
+        <form  id="form1" >
+            <div class="form-row">
+                <div class="form-group col-md-auto">
+                  <label for="People" >Number of people: {{people}}</label>
+                </div>            
+                <div class="form-group col-md-auto">
+                  <label for="Room">Number of room: {{room}}</label>
+                </div>
+                
+                <div class="form-group col-md-auto">
+                <label for="District">District: {{district}}</label>
+                </div>
+                <div class="form-group col-md-auto">
+                    <label for="check-inDay">Check In day: {{checkInDay}}</label>
+                </div>
+                <div class="form-group col-md-auto">
+                    <label for="check-inDay">Check Out day: {{checkOutDay}}</label>
+                </div>
+          </div>
+        </form>
+        <form id="form2">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="Hotel">Hotel: {{hotel}}</label>
+                </div>
+            </div>
+            <div class="form-row" >
+            <div class="form-group col-md-auto">
+                <label for="Name">Your Full Name: {{name}}</label>
+            </div>
+            <div class="form-group col-md-auto">
+                <label for="ID">ID: {{id}}</label>
+            </div>
+            <div class="form-group col-md-auto">
+                <label for="email">Email: {{email}}</label>
+            </div>
+            <div class="form-group col-md-auto" >
+                <label for="Phone">Phone number: {{phone}}</label>
+            </div>
+            </div>
+            <div class="form-row" >
+                <div class="form-group col-md-12">
+                <label for="inputAddress">Current address: {{address}}</label>
+                </div>
+        </form>
+    </div>
+</div>
+  {% endblock %}

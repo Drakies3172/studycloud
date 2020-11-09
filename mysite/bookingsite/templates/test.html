@@ -1,0 +1,175 @@
+
+{% extends '_homebase.html' %}
+{% block booking %}
+{% load static %}
+
+<script>
+  $(document).ready(function(){
+    var myObj = ""
+    $("#people").change(function(){
+      var num1 = parseInt($('#people').val())
+      if(Number.isInteger(num1) == false){
+        alert ("Please input correct amount of people!");
+      }
+    });
+    $("#phone").change(function(){
+      var num1 = parseInt($('#phone').val())
+      if(Number.isInteger(num1) == false){
+        alert ("Please input correct phone number!");
+      }
+    });
+    $("#room").change(function(){
+      var num2 = parseInt($('#room').val())
+      if(Number.isInteger(num2) == false){
+        alert ("Please input correct amount of room!");
+      }
+    });
+    $(document).on('submit','#form1',function(e){
+      e.preventDefault();
+      $("option").remove(".choose_hotel");
+      var d1 = Date.parse($('#datepicker1').val());
+      var d2 = Date.parse($('#datepicker2').val());
+      var d3 = Date.parse(new Date())
+      
+      if (d1 > d2 || d1 < d3) {
+      alert ("Please input correct date!");
+      }
+      else{
+        $.ajax({
+          type:'GET',
+          url:'',
+          datatype: 'json',
+          data:{
+            people:$('#people').val(),
+            room:$('#room').val(),
+            district:$('#district').val(),
+            checkinDay:$('#datepicker1').val(),
+            checkoutDay:$('#datepicker2').val(),
+          },
+          success:function(response){
+            
+            
+          myObj = JSON.parse(response.hotels)
+            
+            for (i = 0; i < myObj.length; i++) {
+              $('#hotel').append(`<option class="choose_hotel" value="${myObj[i].fields.name}"> 
+                                        ${myObj[i].fields.name} 
+                                    </option>`);
+            }
+            $("#hotel").change( function() {
+              var temp = myObj.filter(x => x.fields.name === $("#hotel").val())
+              $('#information').html(`<p id="detail" >${temp[0].fields.description}<p>`)
+              var path = "../images/"+temp[0].fields.image
+              $('#image').html(`<img id="img" src=${path} class="img-fluid" >`)
+            });
+          }
+        })
+      }
+    });
+    
+    $("#form1").change(function() {
+      $("option").remove(".choose_hotel")
+      $('#information').empty()
+      $('#image').empty()
+      myObj = ""
+    });
+    $("#name").click(function(){
+      if($("#hotel").val() == "Choose..."){
+        alert("Please find a hotel !")
+      }
+    })
+  });
+  
+</script>
+      <div style="background: linear-gradient(45deg, rgba(224,243,250,1) 0%,rgba(216,240,252,1) 50%,rgba(184,226,246,1) 51%,rgba(182,223,253,1) 100%); ">
+        <div class="text-center" style="padding-top: 20px;">
+        <img src="{% static '/' %}img/logo.jpeg"   alt="This is not displayed" width="80%">
+        </div>
+      <div class="container" style="padding-top: 20px;">
+        <form  id="form1"  method="GET">
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                  <label for="People">Number of people</label>
+                      <input name="people" type="text" class="form-control " id="people" placeholder="Enter numbers..." required>
+                </div>            
+                <div class="form-group col-md-2">
+                  <label for="Room">Number of room</label>
+                      <input name="room" type="text" class="form-control " id="room" placeholder="Enter numbers..." required>
+                </div>
+                
+                <div class="form-group col-md-3">
+                <label for="District">District</label>
+                <select name = "district" id="district" class="form-control">
+                    <option selected>Choose...</option>
+                    <option value="1">District 1</option>
+                    <option value="2">District 2</option>
+                    <option value="3">District 3</option>
+                    <option value="4">District 4</option>
+                    <option value="5">District 5</option>
+                    <option value="6">District 6</option>
+                    <option value="7">District 7</option>
+                    <option value="8">District 8</option>
+                </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="check-inDay">Check In day</label>
+                    <input name="checkinDay" type="text" class="form-control" id="datepicker1" placeholder="00/00/00"required>
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="check-inDay">Check Out day</label>
+                    <input name="checkoutDay" type="text" class="form-control" id="datepicker2" placeholder="00/00/00" required>
+                </div>
+                <div class="form-group col-auto " style="padding-top: 30px; padding-left: 10px;">
+                    <input value="Search" name="abc" id="button1" type="submit" class="btn btn-primary mb-2">
+                </div>
+          </div>
+
+        </form>
+        <div class="container " style="padding: 0px 60px">
+            <form id="form2" action="."  method="POST">
+              {% csrf_token %}
+              <div class="form-row" style="padding: 10px 0px">
+                  <div class="form-group col-md-12">
+                      <label for="Hotel">Choose your hotel</label>
+                      <select name = "hotel" id="hotel" class="form-control" >
+                      <option selected>Choose...</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="row no-gutters" style="padding: 0px 60px">
+                <div class="col-md-4" id="image">
+                </div>
+                <div class="col-md-auto" id="information" >
+                </div>
+              </div>
+              <div class="form-row" style="padding: 10px 0px">
+                <div class="form-group col-md-3">
+                  <label for="Name">Your full Name</label>
+                  <input name="name" type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="ID">ID</label>
+                  <input name="ID" type="text" class="form-control" id="ID" required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="email">Email</label>
+                  <input name="email" type="text" class="form-control" id="email" required>
+                </div>
+                <div class="form-group col-md-3" >
+                  <label for="Phone">Phone number</label>
+                  <input name="phone" type="text" class="form-control" id="phone" required>
+                </div>
+              </div>
+              <div class="form-row" style="padding: 10px 0px">
+                  <div class="form-group col-md-12">
+                  <label for="inputAddress">Your current address</label>
+                  <input name="inputAddress" type="text" class="form-control" id="inputAddress" placeholder="123 Nguyen Canh Chan Street, 12 Wards, Distric 1, Ho Chi Minh City, Viet Nam" required>
+                  </div>
+                  <div class="form-group col-auto" style="padding-top: 0px;padding-left:847px">
+                    <input value="Confirmation" id="button2" type="submit" class="btn btn-primary mb-2">
+                  </div>
+            </form>
+          </div>
+        </div>
+      </div>
+{% endblock %}
